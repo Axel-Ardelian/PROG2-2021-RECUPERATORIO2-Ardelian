@@ -21,6 +21,7 @@ namespace Logica
                 Usuarios = new List<Usuario>();
             }
         }
+
         public static Principal Instancia
         {
             get
@@ -28,6 +29,8 @@ namespace Logica
                 return _instance;
             }
         }
+
+        //METODO NO NECESARIO, PUEDE SER RESUELTO EN UNA SOLA LINEA
         public Usuario ObtenerUsuarioPorDNI(int dni)
         {
             Usuario nuevousuario = Usuarios.Find(x => x.DNI == dni);
@@ -37,6 +40,7 @@ namespace Logica
             }
             return nuevousuario;
         }
+
         public List<Movimiento> CrearMovimiento(int dniEnvia, int dniRecibe, string descripcion, double monto)
         {
             Usuario usuarioenvia = ObtenerUsuarioPorDNI(dniEnvia);
@@ -55,13 +59,20 @@ namespace Logica
                 usuariorecibe.HistorialDeMovimiento.Add(nuevo2);
                 Movimientos.Add(nuevo);
                 Movimientos.Add(nuevo2);
+
+                //PROBLEMA DE DISEÑO, ESTA LOGICA ES DEL USUARIO. CON LO CUAL EN LA CLASE USUARIO PODRIA HABER UN METODO
+                //CREARTRANSACCION O CREARMOVIMIENTO QUE TENGA LAS DOS ACCIONES, AGREGAR A LA LISTA Y MODIFICAR EL SALDO.
+
                 return Movimientos;
             }
             else
             {
                 return null;
             }          
+
+            //PORQUE NO USAR LA CLASE MENSAJE PARA RETORNAR? SE PODRIA USAR IGUAL QUE MOVIMIENTO
         }
+
         public Mensaje CancelarMovimiento(int idenvia, int idrecibe)
         {
             Movimiento cancelarmovimiento = Movimientos.Find(x => x.ID == idenvia);
@@ -78,14 +89,17 @@ namespace Logica
                 }
                 else
                 {
+                    //ESPECIFICAR LOS MENSAJES DE ERROR
                     return new Mensaje(true, "Error");
                 }
             }
             else
             {
+                //ESPECIFICAR LOS MENSAJES DE ERROR
                 return new Mensaje(true, "Error");
             }
         }
+
         public List<Movimiento> ObtenerHistorial(int dni)
         {
             Usuario historial = ObtenerUsuarioPorDNI(dni);
